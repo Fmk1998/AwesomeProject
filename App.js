@@ -1,122 +1,55 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-import {
-  SafeAreaView,
-  // 样式对象
-  StyleSheet,
-  ScrollView,
-  // 视图组件
-  View,
-  // 文本组件
-  Text,
-  StatusBar,
-} from 'react-native';
+import {View, Text, StyleSheet,FlatList} from 'react-native';
+import Header from './js/components/Header';
+import ListItem from './js/components/ListItem';
+import AddItem from "./js/components/Additem";
+import UUID from "./js/utils/uuid";
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 
-const App: () => React$Node = () => {
-  // 定义视图的jsx对象
-  // jsx对象只能有一个根对象
-  // 创建UI时最基础的组件View。类似于网页的div
-  // 文本的内容需要放置到Text组件中
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
+const App = () => {
+    const [items, setItems] = React.useState([{id: 1, text: 'react'}, {id: 2, text: 'vue'}, {id: 3, text: 'jquery'},
+    ]);
+
+     /**
+       * 付民康  2021/3/8
+       * desc: 点击删除事件
+       * @params
+       **/
+     const deleteItem = (id) => {
+         setItems((pre)=>{
+             return pre.filter((item)=> {
+                 return item.id !== id
+             })
+         })
+     }
+
+      /**
+        * 付民康  2021/3/8
+        * desc: 点击添加事件
+        * @params
+        **/
+      const addItem = (text) => {
+          if (text) {
+              setItems((pre)=>{
+                  return [...pre,{text:text,id:UUID()}]
+              })
+          }
+      }
+
+    return (
+        <View style={styles.container}>
+            <Header title={'我的应用'}/>
+            <AddItem addItem={addItem}/>
+            <FlatList data={items} renderItem={({item})=><ListItem deleteItem={deleteItem} item={item}/>}/>
+        </View>
+    );
+
 };
 
-// 定义样式对象
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
+    container: {
+        flex: 1,
+    },
 });
 
 export default App;
